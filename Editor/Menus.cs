@@ -15,7 +15,7 @@ namespace Smidgenomics.Unity.EUtils.Editor
 		private static void Restart() => UnityUtility.RestartEditor();
 
 		/* Misc. helpers */
-		[MenuItem("Assets/Git Window", false, -20)]
+		[MenuItem("Assets/Git Terminal", false, -20)]
 		private static void OpenGitWindow()
 		{
 			var path = AssetDatabase.GetAssetPath(Selection.activeObject);
@@ -30,7 +30,7 @@ namespace Smidgenomics.Unity.EUtils.Editor
 		}
 
 		/* Misc. helpers */
-		[MenuItem("Assets/Git Window", true, -20)]
+		[MenuItem("Assets/Git Terminal", true, -20)]
 		public static bool OpenGitWindow_Validate()
 		{
 			if (!Selection.activeObject)
@@ -39,7 +39,11 @@ namespace Smidgenomics.Unity.EUtils.Editor
 			}
 			var path = AssetDatabase.GetAssetPath(Selection.activeObject);
 			var ppath = Application.dataPath.Substring(0, Application.dataPath.Length - 7);
-			return System.IO.Directory.Exists(ppath + "/" + path + "/.git");
+
+			var gitPath = ppath + "/" + path + "/.git";
+
+			return System.IO.Directory.Exists(gitPath)
+			|| System.IO.File.Exists(gitPath);
 		}
 
 		// copy guid of selected asset
