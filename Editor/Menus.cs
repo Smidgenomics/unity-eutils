@@ -10,13 +10,27 @@ namespace Smidgenomics.Unity.EUtils.Editor
 	/// </summary>
 	internal static class Menus
 	{
-		/* Misc. helpers */
+		// re-open project
 		[MenuItem("Help/Restart Editor", false, -20)]
 		private static void Restart() => UnityUtility.RestartEditor();
+		
+		// sometimes for whatever reason the scene camera starts slanting
+		[MenuItem("Help/Fix Tilted Scene Camera", false, 100)]
+		private static void FixTiltedCamera()
+		{
+			if (!SceneView.lastActiveSceneView)
+			{
+				return;
+			}
+			var sv = SceneView.lastActiveSceneView;
+			var rot = sv.rotation.eulerAngles;
+			rot.z = 0f; // removing tilt
+			sv.rotation = Quaternion.Euler(rot);
+		}
 
-		/* Misc. helpers */
+		// open folder in terminal
 		[MenuItem("Assets/Git Terminal", false, -20)]
-		private static void OpenGitWindow()
+		private static void OpenGitTerminal()
 		{
 			var path = AssetDatabase.GetAssetPath(Selection.activeObject);
 			var ppath = Application.dataPath.Substring(0, Application.dataPath.Length - 7);
@@ -29,9 +43,9 @@ namespace Smidgenomics.Unity.EUtils.Editor
 			System.Diagnostics.Process.Start(startInfo);
 		}
 
-		/* Misc. helpers */
+		// check if active folder is git repo
 		[MenuItem("Assets/Git Terminal", true, -20)]
-		public static bool OpenGitWindow_Validate()
+		private static bool OpenGitTerminal_Validate()
 		{
 			if (!Selection.activeObject)
 			{
